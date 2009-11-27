@@ -6,8 +6,9 @@ import sys
 YAML = False
 
 def extractText(soup):
-  """ Pull out just the text, with whitespace trimmed and normalised from a BeautifulSoup tag.
-      I'm amazed Beautiful soup doesn't have something like this built in."""
+  """ Pull out just the text, with whitespace trimmed and normalised from a
+      BeautifulSoup tag. I'm amazed Beautiful soup doesn't have something
+      like this built in."""
   try:
     return ' '.join(' '.join(soup(text=True)).replace('&amp;','&').replace('&nbsp;',' ').split())
   except:
@@ -86,6 +87,7 @@ for year in range(2000,2010):
         cast[-1],extra = cast[-1].rsplit(' and ',1)
         cast.append(extra)
 
+      # Add link to page sourced from
       source = "http://www.its-behind-you.com/diary%s%s.html" % (year,year+1)
 
       plays.append({'theatre':theatre,'dates':dates,'title':title,'cast':cast, 'year':year, 'source':source})
