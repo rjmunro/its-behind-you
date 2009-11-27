@@ -66,10 +66,7 @@ for year in range(2000,2010):
 
       plays.append({'theatre':theatre,'dates':dates,'title':title,'cast':cast, 'year':year, 'source':source})
 
-if not YAML:
-  from pprint import pprint
-  pprint(plays)
-else:
+if YAML:
   import yaml
   # this is the magic that treats all strings as unicode<br>
   def represent_unicode(dumper, data):
@@ -81,5 +78,10 @@ else:
   yaml.add_constructor("tag:yaml.org,2002:str", construct_unicode)
 
   print yaml.dump(plays,allow_unicode=True)
+else:
+  from pprint import pprint
+  pprint(plays)
 
-print str(len(plays)) + " plays dumped"
+
+import sys
+sys.stderr.write("%s plays dumped\n" % len(plays))
