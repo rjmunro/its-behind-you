@@ -37,13 +37,7 @@ for year in range(2002,2005):
       if not dates[1].endswith(str(year+1)):
         dates[0]+=str(year+1)
 
-      titleTag = rawCols.get('Pantomime',rawCols.get('Production',''))
-      if titleTag:
-        title = titleTag.findAll(text=True)[0]
-        if len(titleTag)>1:
-          print titleTag
-      else:
-        title = ""
+      title = extractText(rawCols.get('Pantomime',rawCols.get('Production','')))
       if title.endswith(' handbill') or title.endswith(' Handbill'):
         title = title[:-9]
 
