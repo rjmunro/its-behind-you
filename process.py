@@ -26,11 +26,18 @@ for year in range(2002,2005):
       theatre = extractText(rawCols['Theatre']).split(" Box Office")[0]
 
       rawDates = extractText(rawCols['Dates']).replace(" '"," 20")
-      dates = [rawDates,""]
       if " to " in rawDates:
         dates = rawDates.split(" to ")
-      if " - " in rawDates:
+      elif " - " in rawDates:
         dates = rawDates.split(" - ")
+      elif rawDates.lower().startswith("until "):
+        dates = ['',rawDates[6:]]
+      elif rawDates.lower().startswith("from "):
+        dates = [rawDates[5:],'']
+      elif not rawDates:
+        dates = ['','']
+      else:
+        dates = [rawDates,"!!ERROR!!"]
 
       for i in 0,1:
         if dates[i][-3:] in ("Nov","Dec"):
