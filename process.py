@@ -28,8 +28,15 @@ for year in range(2000,2010):
     for row in table.findAll('tr')[1:]:
       rawCols = dict(zip(keys,row.findAll('td')))
 
+      # Get theatre column
+      theatreCol = rawCols.get('Venue',rawCols.get('Theatre',''))
+      # Get theatre logo if present
+      if theatreCol.img:
+        theatreImg = str(theatreCol.img['src'])
+      else:
+        theatreImg = ''
       # Get theatre name, cutting off text after "Box Office" if present
-      theatre = extractText(rawCols.get('Venue',rawCols.get('Theatre',''))).split(" Box Office",1)[0]
+      theatre = extractText(theatreCol).split(" Box Office",1)[0]
 
       # Get date column and fix years like '01 to be 2001
       rawDates = extractText(rawCols['Dates']).replace(" '"," 20")
@@ -90,7 +97,11 @@ for year in range(2000,2010):
       # Add link to page sourced from
       source = "http://www.its-behind-you.com/diary%s%s.html" % (year,year+1)
 
-      plays.append({'theatre':theatre,'dates':dates,'title':title,'cast':cast, 'year':year, 'source':source})
+      # Find any images
+      pictures = [i['src'] for i in row.findAll('img') if str(i['src']) != theatreImg]
+
+
+      plays.append({'theatre':theatre,'theatreImg':theatreImg,'dates':dates,'title':title,'cast':cast, 'year':year, 'source':source, "pictures": pictures})
 
 if YAML:
   import yaml
