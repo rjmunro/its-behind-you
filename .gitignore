@@ -2,3 +2,5 @@
 plays*.py
 plays*.yaml
 images.html
+.*.swp
+
