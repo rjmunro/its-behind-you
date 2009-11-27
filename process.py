@@ -32,10 +32,11 @@ for year in range(2002,2005):
       if " - " in rawDates:
         dates = rawDates.split(" - ")
 
-      if not dates[0].endswith(str(year)):
-        dates[0]+=' ' + str(year)
-      if not dates[1].endswith(str(year+1)):
-        dates[1]+=' ' + str(year+1)
+      for i in 0,1:
+        if dates[i][-3:] in ("Nov","Dec"):
+          dates[i]+=' ' + str(year)
+        if dates[i][-3:] in ("Jan","Feb"):
+          dates[i]+=' ' + str(year+1)
 
       title = extractText(rawCols.get('Pantomime',rawCols.get('Production','')))
       if title.endswith(' handbill') or title.endswith(' Handbill'):
