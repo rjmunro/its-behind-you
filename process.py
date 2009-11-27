@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # vim: set fileencoding=UTF-8 :
 from BeautifulSoup import BeautifulSoup
-from imageList import imageList
+from imageList import getTitleOfImage
 import sys
 YAML = False
 
@@ -59,9 +59,8 @@ for year in range(2000,2010):
       if rawTitle.b:
         title = extractText(rawTitle.b)
       if rawTitle.img:
-        if rawTitle.img['src'] in imageList:
-          title = imageList[rawTitle.img['src']]
-        else:
+        title = getTitleOfImage(rawTitle.img['src'])
+        if not title:
           title = "!!ERROR !! %s" % rawTitle.img['src']
           missingImgs.add(rawTitle.img['src'])
       else:

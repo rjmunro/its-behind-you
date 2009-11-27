@@ -60,3 +60,21 @@ imageList = {
   'images/motherwelllogojack09.jpg': 'Jack and the Beanstalk',
   'images/jackNEW2008logo.gif': 'Jack and the Beanstalk',
 }
+shortCuts = [
+    ("aladdin","Aladdin"),
+    ("dick","Dick Whittington"),
+    ("jack","Jack and the Beanstalk"),
+    ("cinder","Cinderella"),
+    ("snow","Snow White"),
+    ("goose","Mother Goose"),
+    ("peter","Peter Pan"),
+    ("sleep","Sleeping Beauty"),
+    ("beanstalk","Jack and the Beanstalk"),
+    ]
+def getTitleOfImage(img):
+  if img in imageList:
+    return imageList[img]
+  img = img.lower()
+  for i in shortCuts:
+    if i[0] in img:
+      return i[1]
