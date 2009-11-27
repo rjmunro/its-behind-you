@@ -11,13 +11,12 @@ def extractText(soup):
 
 plays = []
 #for year in range(2000,2010):
-for year in range(2002,2005):
+for year in range(2000,2010):
   soup = BeautifulSoup(open("diary"+str(year)+str(year+1)+".html"))
   for table in soup.findAll('table'):
     keys = []
     for col in table.tr('td'):
       keys.append(extractText(col).replace('Venue','Theatre'))
-    print year,keys
     if 'Dates' not in keys:
       continue # Skip this table - it will be decorative
     for row in table.findAll('tr')[1:]:
