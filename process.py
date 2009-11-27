@@ -55,7 +55,9 @@ for year in range(2002,2005):
         cast[-1],extra = cast[-1].rsplit(' and ',1)
         cast.append(extra)
 
-      plays.append({'theatre':theatre,'dates':dates,'title':title,'cast':cast, 'year':year})
+      source = "http://www.its-behind-you.com/diary%s%s.html" % (year,year+1)
+
+      plays.append({'theatre':theatre,'dates':dates,'title':title,'cast':cast, 'year':year, 'source':source})
 
 if not YAML:
   from pprint import pprint
