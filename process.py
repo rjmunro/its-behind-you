@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # vim: set fileencoding=UTF-8 :
 from BeautifulSoup import BeautifulSoup
-
+from imageList import imageList
+import sys
 YAML = False
 
 def extractText(soup):
@@ -12,6 +13,7 @@ def extractText(soup):
   except:
     return soup
 
+missingImgs = set()
 plays = []
 for year in range(2000,2010):
   soup = BeautifulSoup(open("diary"+str(year)+str(year+1)+".html"))
@@ -53,7 +55,17 @@ for year in range(2000,2010):
           dates[i]+=' ' + str(year+1)
 
       # Get the title and strip the word "Handbill" from the end of it (if present)
-      title = extractText(rawCols.get('Pantomime',rawCols.get('Production','')))
+      rawTitle = rawCols.get('Pantomime',rawCols.get('Production',''))
+      if rawTitle.b:
+        title = extractText(rawTitle.b)
+      if rawTitle.img:
+        if rawTitle.img['src'] in imageList:
+          title = imageList[rawTitle.img['src']]
+        else:
+          title = "!!ERROR !! %s" % rawTitle.img['src']
+          missingImgs.add(rawTitle.img['src'])
+      else:
+        title = extractText(rawTitle)
       if title.lower().endswith(' handbill'):
         title = title[:-9]
 
@@ -95,6 +107,7 @@ else:
   from pprint import pprint
   pprint(plays)
 
-
-import sys
 sys.stderr.write("%s plays dumped\n" % len(plays))
+if missingImgs:
+  for i in missingImgs:
+    sys.stderr.write("  '%s': '',\n" % i)
