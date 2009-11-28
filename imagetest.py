@@ -5,7 +5,7 @@ print """<html>
 <head>
   <title>Image title test</title>
   <style>
-    div { height: 150px; width: 250px; text-align: center }
+    div { height: 200px; width: 290px; text-align: center; float: left }
   </style>
 </head>
 <body>
