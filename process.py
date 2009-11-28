@@ -19,6 +19,8 @@ plays = []
 for year in range(2000,2010):
   soup = BeautifulSoup(open("diary"+str(year)+str(year+1)+".html"))
   for table in soup.findAll('table'):
+    producer = ""
+    producerImg = ""
     # Pull out the first row of the table as keys
     keys = []
     for col in table.tr('td'):
@@ -94,14 +96,19 @@ for year in range(2000,2010):
         cast[-1],extra = cast[-1].rsplit(' and ',1)
         cast.append(extra)
 
+      # Producers
+      if "Producer" in keys:
+        producer = extractText(rawCols['Producer'])
+        producerImg = rawCols['Producer'].img and rawCols['Producer'].img['src'] or ''
+
       # Add link to page sourced from
       source = "http://www.its-behind-you.com/diary%s%s.html" % (year,year+1)
 
       # Find any images
-      pictures = [i['src'] for i in row.findAll('img') if str(i['src']) != theatreImg]
+      pictures = [i['src'] for i in row.findAll('img') if str(i['src']) not in (theatreImg, producerImg)]
 
-
-      plays.append({'theatre':theatre,'theatreImg':theatreImg,'dates':dates,'title':title,'cast':cast, 'year':year, 'source':source, "pictures": pictures})
+      plays.append({'theatre':theatre,'theatreImg':theatreImg,'dates':dates,'title':title,'cast':cast, 'year':year, 'source':source,
+        "pictures": pictures, "producer":producer, "producerImg":producerImg})
 
 if YAML:
   import yaml
