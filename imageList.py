@@ -67,14 +67,15 @@ imageList = {
 }
 shortCuts = [
     ("aladdin","Aladdin"),
-    ("dick","Dick Whittington"),
-    ("jack","Jack and the Beanstalk"),
+    ("batb","Beauty and the Beast"),
     ("cinder","Cinderella"),
-    ("snow","Snow White"),
+    ("dick","Dick Whittington"),
+    ("beanstalk","Jack and the Beanstalk"),
+    ("jack","Jack and the Beanstalk"),
     ("goose","Mother Goose"),
     ("peter","Peter Pan"),
     ("sleep","Sleeping Beauty"),
-    ("beanstalk","Jack and the Beanstalk"),
+    ("snow","Snow White"),
     ]
 def getTitleOfImage(img):
   if img in imageList:
