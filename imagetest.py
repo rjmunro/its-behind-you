@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # vim: set fileencoding=UTF-8 :
-from imageList import imageList
+from imageList import imageList,getTitleOfImage
 print """<html>
 <head>
   <title>Image title test</title>
@@ -12,7 +12,7 @@ print """<html>
 """
 
 for url,title in imageList.items():
-  print '<div><img src="http://www.its-behind-you.com/%s" /><br />%s</div>' % (url,title)
+  print '<div><img src="http://www.its-behind-you.com/%s" /><br />%s<br />%s</div>' % (url,url,getTitleOfImage(url))
 
 print """</body>
 </html>"""
