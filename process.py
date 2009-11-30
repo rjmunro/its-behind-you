@@ -134,5 +134,5 @@ else:
 
 sys.stderr.write("%s plays dumped\n" % len(plays))
 if missingImgs:
-  for i in missingImgs:
+  for i in sorted(list(missingImgs)):
     sys.stderr.write("  '%s': '',\n" % i)
