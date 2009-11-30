@@ -64,17 +64,22 @@ for year in range(2000,2010):
         if dates[i][-3:].lower() in ("jan","feb"):
           dates[i]+=' ' + str(year+1)
 
-      # Get the title and strip the word "Handbill" from the end of it (if present)
+      # Get the title
       rawTitle = rawCols.get('Pantomime',rawCols.get('Production',''))
+      titleImg = ""
+      # If part of it is bold, that's the title.
       if rawTitle.b:
         title = extractText(rawTitle.b)
-      if rawTitle.img:
-        title = getTitleOfImage(rawTitle.img['src'])
+      # If there is an image, that's the title.
+      elif rawTitle.img:
+        titleImg = rawTitle.img['src']
+        title = getTitleOfImage(titleImg)
         if not title:
-          title = "!!ERROR !! %s" % rawTitle.img['src']
-          missingImgs.add(rawTitle.img['src'])
+          title = "!!ERROR !! %s" % titleImg
+          missingImgs.add(titleImg)
       else:
         title = extractText(rawTitle)
+      # Strip the link to the handbill if present
       if title.lower().endswith(' handbill'):
         title = title[:-9]
 
@@ -104,11 +109,11 @@ for year in range(2000,2010):
       # Add link to page sourced from
       source = "http://www.its-behind-you.com/diary%s%s.html" % (year,year+1)
 
-      # Find any images
-      pictures = [i['src'] for i in row.findAll('img') if str(i['src']) not in (theatreImg, producerImg)]
+      # Find any other images
+      pictures = [i['src'] for i in row.findAll('img') if str(i['src']) not in (theatreImg, producerImg, titleImg)]
 
       plays.append({'theatre':theatre,'theatreImg':theatreImg,'dates':dates,'title':title,'cast':cast, 'year':year, 'source':source,
-        "pictures": pictures, "producer":producer, "producerImg":producerImg})
+        "pictures": pictures, "producer":producer, "producerImg":producerImg, "titleImg":titleImg})
 
 if YAML:
   import yaml
