@@ -129,6 +129,7 @@ if YAML:
   print yaml.dump(plays,allow_unicode=True)
 else:
   from pprint import pprint
+  print "plays = ",
   pprint(plays)
 
 sys.stderr.write("%s plays dumped\n" % len(plays))
