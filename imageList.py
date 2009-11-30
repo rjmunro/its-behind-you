@@ -58,8 +58,6 @@ imageList = {
   'images/south08logo.jpg': '',
   'images/tamesidehippodrime.gif': '',
   'images/windsorlogo08.jpg': '',
-  'images/wizard-logo_ybr.jpg': '',
-  'images/wizardlogoleicester.jpg': '',
 }
 shortCuts = [
     ("aladdin","Aladdin"),
@@ -72,6 +70,7 @@ shortCuts = [
     ("peter","Peter Pan"),
     ("sleep","Sleeping Beauty"),
     ("snow","Snow White"),
+    ("wizard","The Wizard of Oz"),
     ]
 def getTitleOfImage(img):
   if img in imageList:
