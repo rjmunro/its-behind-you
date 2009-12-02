@@ -151,26 +151,27 @@ for playId in range(len(plays)-1):
     dupes2.append(plays[playId+1])
     dupeIds.append(playId)
 
-if YAML:
-  import yaml
-  # this is the magic that treats all strings as unicode<br>
-  def represent_unicode(dumper, data):
+if __name__=="__main__":
+  if YAML:
+    import yaml
+    # this is the magic that treats all strings as unicode<br>
+    def represent_unicode(dumper, data):
 
-      return dumper.represent_scalar("tag:yaml.org,2002:str", data)
-  def construct_unicode(loader, node):
-      return unicode(loader.construct_scalar(node))
-  yaml.add_representer(unicode, represent_unicode)
-  yaml.add_constructor("tag:yaml.org,2002:str", construct_unicode)
+        return dumper.represent_scalar("tag:yaml.org,2002:str", data)
+    def construct_unicode(loader, node):
+        return unicode(loader.construct_scalar(node))
+    yaml.add_representer(unicode, represent_unicode)
+    yaml.add_constructor("tag:yaml.org,2002:str", construct_unicode)
 
-  print yaml.dump(plays,allow_unicode=True)
-else:
-  from pprint import pprint
-  print "plays = ",
-  pprint(plays)
+    print yaml.dump(plays,allow_unicode=True)
+  else:
+    from pprint import pprint
+    print "plays = ",
+    pprint(plays)
 
-sys.stderr.write("%s plays dumped\n" % len(plays))
-sys.stderr.write("%s dupes found\n" % len(dupeIds))
+  sys.stderr.write("%s plays dumped\n" % len(plays))
+  sys.stderr.write("%s dupes found\n" % len(dupeIds))
 
-if missingImgs:
-  for i in sorted(list(missingImgs)):
-    sys.stderr.write("  '%s': '',\n" % i)
+  if missingImgs:
+    for i in sorted(list(missingImgs)):
+      sys.stderr.write("  '%s': '',\n" % i)
