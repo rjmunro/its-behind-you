@@ -124,32 +124,37 @@ plays.sort(lambda x,y: cmp(x['year'],y['year']) or cmp(x['title'],y['title']) or
 dupes1 = []
 dupes2 = []
 dupeIds = []
-for playId in range(len(plays)-1):
+playId = 1
+while playId < len(plays):
   matching = 0
   matchingKeys = []
   nonMatching = 0
   nonMatchingKeys = []
   for key in plays[playId].keys():
-    if plays[playId+1].has_key(key):
-      if plays[playId][key] and plays[playId+1][key]: # Check both keys have data
-        if plays[playId][key]==plays[playId+1][key]: # See if it's the same data
+    if plays[playId-1].has_key(key):
+      if plays[playId][key] and plays[playId-1][key]: # Check both keys have data
+        if plays[playId][key]==plays[playId-1][key]: # See if it's the same data
           matching += 1
           matchingKeys.append(key)
         else:
           nonMatching += 1
           nonMatchingKeys.append(key)
+
   #if 'year' in matchingKeys and matching > nonMatching*2: # Probably a dupe
   #if matching > 3 and nonMatching < 4 and 'dates' in nonMatchingKeys and 'theatre' in nonMatchingKeys: # Same production in 2 theatres
   if nonMatching==0: # Certainly a dupe - nothing disagrees. There may data missing from one or other.
     plays[playId]['dupe'] = playId
-    plays[playId+1]['dupe'] = playId
+    plays[playId-1]['dupe'] = playId
     plays[playId]['dupeKeys'] = matchingKeys
-    plays[playId+1]['dupeKeys'] = matchingKeys
+    plays[playId-1]['dupeKeys'] = matchingKeys
     plays[playId]['nonDupeKeys'] = nonMatchingKeys
-    plays[playId+1]['nonDupeKeys'] = nonMatchingKeys
+    plays[playId-1]['nonDupeKeys'] = nonMatchingKeys
     dupes1.append(plays[playId])
-    dupes2.append(plays[playId+1])
+    dupes2.append(plays[playId-1])
     dupeIds.append(playId)
+
+
+  playId += 1
 
 if __name__=="__main__":
   if YAML:
