@@ -93,11 +93,13 @@ for year in range(2000,2010):
         cast = castText.split("; ")
       elif ", " in castText:
         cast = castText.split(", ")
-      else:
+      elif castText:
         cast = [castText]
+      else:
+        cast = []
 
       # Split the last cast member into 2 people if the list ends with " and "
-      if ' and ' in cast[-1]:
+      if cast and ' and ' in cast[-1]:
         cast[-1],extra = cast[-1].rsplit(' and ',1)
         cast.append(extra)
 
