@@ -125,6 +125,7 @@ dupes1 = []
 dupes2 = []
 dupeIds = []
 playId = 1
+removedDupes = 0
 while playId < len(plays):
   matching = 0
   matchingKeys = []
@@ -145,6 +146,7 @@ while playId < len(plays):
     for key in plays[playId].keys():
       plays[playId-1][key] = plays[playId-1][key] or plays[playId][key]
     plays.pop(playId)
+    removedDupes += 1
     continue # don't increment playId
 
   elif matching > 3 and nonMatching < 4 and 'dates' in nonMatchingKeys and 'theatre' in nonMatchingKeys: # Same production in 2 theatres
@@ -185,8 +187,9 @@ if __name__=="__main__":
     print "plays = ",
     pprint(plays)
 
+  sys.stderr.write("%s dupes removed\n" % removedDupes)
   sys.stderr.write("%s plays dumped\n" % len(plays))
-  sys.stderr.write("%s dupes found\n" % len(dupeIds))
+  sys.stderr.write("%s more possible dupes found\n" % len(dupeIds))
 
   if missingImgs:
     for i in sorted(list(missingImgs)):
