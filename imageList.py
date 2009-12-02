@@ -26,7 +26,7 @@ imageList = {
   'images/HBPussBootslogo.jpg': 'Puss in Bots',
   'images/HolmanSWLogo-2.jpg': 'Snow White',
   'images/HorshamLogo09.jpg': 'Cinderella',
-  'images/Kids-show-logo.jpg': 'The Emerors New Clothes',
+  'images/Kids-show-logo.jpg': 'The Emperors New Clothes',
   'images/OwenMoneyPanLogo.jpg': 'Peter Pan',
   'images/PPLogo_new.jpg': 'Peter Pan',
   'images/SWLogo-Stockport-Plaza.jpg': 'Show White',
