@@ -14,6 +14,14 @@ def extractText(soup):
   except:
     return soup
 
+def fixLinks(link):
+  if link.startswith('http://'):
+    return link
+  elif link.startswith('/'):
+    return 'http://www.its-behind-you.com'+link
+  else:
+    return 'http://www.its-behind-you.com/'+link
+
 missingImgs = set()
 plays = []
 castLinks = {}
@@ -115,11 +123,11 @@ for year in range(2000,2010):
       source = "http://www.its-behind-you.com/diary%s%s.html" % (year,year+1)
 
       # Find any other images
-      pictures = [i['src'] for i in row.findAll('img') if str(i['src']) not in (theatreImg, producerImg, titleImg)]
+      pictures = [fixLinks(i['src']) for i in row.findAll('img') if str(i['src']) not in (theatreImg, producerImg, titleImg)]
 
       # Find any links
       links = set()
-      for href,text in [(i['href'],extractText(i)) for i in row.findAll('a') if i.has_key('href')]:
+      for href,text in [(fixLinks(i['href']),extractText(i)) for i in row.findAll('a') if i.has_key('href')]:
         if text in cast:
           if text in castLinks:
             castLinks[text].add(href)
