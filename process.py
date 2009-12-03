@@ -53,7 +53,7 @@ for year in range(2000,2010):
         if colname in ('venue','theatre'):
           # Get theatre logo if present
           if colsoup.img:
-            theatreImg = colsoup.img['src']
+            theatreImg = fixLinks(colsoup.img['src'])
           # Get theatre name, cutting off text after "Box Office" if present
           theatre = extractText(colsoup).split(" Box Office",1)[0]
 
@@ -91,6 +91,7 @@ for year in range(2000,2010):
           elif colsoup.img:
             titleImg = colsoup.img['src']
             title = getTitleOfImage(titleImg)
+            titleImg = fixLinks(titleImg)
             if not title:
               title = "!!ERROR !! %s" % titleImg
               missingImgs.add(titleImg)
@@ -123,13 +124,13 @@ for year in range(2000,2010):
         # Producers
         elif colname == "producer":
           producer = extractText(colsoup)
-          producerImg = colsoup.img and colsoup.img['src'] or ''
+          producerImg = colsoup.img and fixLinks(colsoup.img['src']) or ''
 
       # Add link to page sourced from
       source = "http://www.its-behind-you.com/diary%s%s.html" % (year,year+1)
 
       # Find any other images
-      pictures = [fixLinks(i['src']) for i in row.findAll('img') if i['src'] not in (theatreImg, producerImg, titleImg)]
+      pictures = [fixLinks(i['src']) for i in row.findAll('img') if fixLinks(i['src']) not in (theatreImg, producerImg, titleImg)]
 
       # Find any links
       links = set()
