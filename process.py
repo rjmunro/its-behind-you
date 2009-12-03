@@ -114,8 +114,11 @@ for year in range(2000,2010):
       # Find any other images
       pictures = [i['src'] for i in row.findAll('img') if str(i['src']) not in (theatreImg, producerImg, titleImg)]
 
+      # Find any other links
+      links = [(i['href'],extractText(i)) for i in row.findAll('a') if i.has_key('href')]
+
       plays.append({'theatre':theatre,'theatreImg':theatreImg,'dates':dates,'title':title,'cast':cast, 'year':year, 'source':source,
-        "pictures": pictures, "producer":producer, "producerImg":producerImg, "titleImg":titleImg})
+        "pictures": pictures, "producer":producer, "producerImg":producerImg, "titleImg":titleImg, "links": links})
 
 # Sort plays
 plays.sort(lambda x,y: cmp(x['year'],y['year']) or cmp(x['title'],y['title']) or cmp(x['theatre'],y['theatre']))
