@@ -19,6 +19,8 @@ def fixLinks(link):
     return ""
   elif link.startswith('http://'):
     return link
+  elif link.startswith('www.'):
+    return 'http://'+link
   elif link.startswith('/'):
     return 'http://www.its-behind-you.com'+link
   else:
