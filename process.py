@@ -49,6 +49,8 @@ for year in range(2000,2010):
         dates = rawDates.split(" to ",1)
       elif " - " in rawDates:
         dates = rawDates.split(" - ",1)
+      elif " -" in rawDates:
+        dates = rawDates.split(" -",1)
       elif rawDates.lower().startswith("until "):
         dates = ['',rawDates[6:]]
       elif rawDates.lower().startswith("from "):
