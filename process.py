@@ -35,14 +35,14 @@ for year in range(2000,2010):
     # Pull out the first row of the table as keys
     keys = []
     for col in table.tr('td'):
-      keys.append(extractText(col))
-    if 'Dates' not in keys:
+      keys.append(extractText(col).lower())
+    if 'dates' not in keys:
       continue # Skip this table - it's not a normal list of productions
     for row in table.findAll('tr')[1:]:
       rawCols = dict(zip(keys,row.findAll('td')))
 
       # Get theatre column
-      theatreCol = rawCols.get('Venue',rawCols.get('Theatre',''))
+      theatreCol = rawCols.get('venue',rawCols.get('theatre',''))
       # Get theatre logo if present
       if theatreCol.img:
         theatreImg = str(theatreCol.img['src'])
@@ -52,7 +52,7 @@ for year in range(2000,2010):
       theatre = extractText(theatreCol).split(" Box Office",1)[0]
 
       # Get date column and fix years like '01 to be 2001
-      rawDates = extractText(rawCols['Dates']).replace(" '"," 20")
+      rawDates = extractText(rawCols['dates']).replace(" '"," 20")
 
       # Split into start and end date
       if " to " in rawDates:
@@ -78,7 +78,7 @@ for year in range(2000,2010):
           dates[i]+=' ' + str(year+1)
 
       # Get the title
-      rawTitle = rawCols.get('Pantomime',rawCols.get('Production',''))
+      rawTitle = rawCols.get('pantomime',rawCols.get('production',''))
       titleImg = ""
       # If part of it is bold, that's the title.
       if rawTitle.b:
@@ -97,7 +97,7 @@ for year in range(2000,2010):
         title = title[:-9]
 
       # Get text from cast column and strip the word "Handbill" from the end of it (if present)
-      castText = extractText(rawCols.get('Starring',rawCols.get('Cast Details','')))
+      castText = extractText(rawCols.get('starring',rawCols.get('cast details','')))
       if castText.lower().endswith(' handbill'):
         castText = castText[:-9]
 
@@ -117,9 +117,9 @@ for year in range(2000,2010):
         cast.append(extra)
 
       # Producers
-      if "Producer" in keys:
-        producer = extractText(rawCols['Producer'])
-        producerImg = rawCols['Producer'].img and rawCols['Producer'].img['src'] or ''
+      if "producer" in keys:
+        producer = extractText(rawCols['producer'])
+        producerImg = rawCols['producer'].img and rawCols['producer'].img['src'] or ''
 
       # Add link to page sourced from
       source = "http://www.its-behind-you.com/diary%s%s.html" % (year,year+1)
