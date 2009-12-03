@@ -53,7 +53,7 @@ for year in range(2000,2010):
         if colname in ('venue','theatre'):
           # Get theatre logo if present
           if colsoup.img:
-            theatreImg = str(colsoup.img['src'])
+            theatreImg = colsoup.img['src']
           # Get theatre name, cutting off text after "Box Office" if present
           theatre = extractText(colsoup).split(" Box Office",1)[0]
 
@@ -129,7 +129,7 @@ for year in range(2000,2010):
       source = "http://www.its-behind-you.com/diary%s%s.html" % (year,year+1)
 
       # Find any other images
-      pictures = [fixLinks(i['src']) for i in row.findAll('img') if str(i['src']) not in (theatreImg, producerImg, titleImg)]
+      pictures = [fixLinks(i['src']) for i in row.findAll('img') if i['src'] not in (theatreImg, producerImg, titleImg)]
 
       # Find any links
       links = set()
