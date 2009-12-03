@@ -138,14 +138,14 @@ for year in range(2000,2010):
       links = set()
       for href,text in [(fixLinks(i['href']),extractText(i)) for i in row.findAll('a') if i.has_key('href')]:
         if text in cast:
-          if text in castLinks:
+          if text in castLinks: # This person already has some links
             castLinks[text].add(href)
-          else:
+          else: # Add a new set to castLins for this person
             castLinks[text] = set([href])
         elif href.endswith('.jpg'):
           pictures.append(href)
         else:
-            links.add((text,href))
+          links.add((text,href))
 
       plays.append({'theatre':theatre,'theatreImg':theatreImg,'dates':dates,'title':title,'cast':cast, 'year':year, 'source':source,
         "pictures": pictures, "producer":producer, "producerImg":producerImg, "titleImg":titleImg, "links": list(links)})
