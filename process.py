@@ -128,7 +128,7 @@ for year in range(2000,2010):
         elif href.endswith('.jpg'):
           pictures.append(href)
         else:
-            links.add((href,text))
+            links.add((text,href))
 
       plays.append({'theatre':theatre,'theatreImg':theatreImg,'dates':dates,'title':title,'cast':cast, 'year':year, 'source':source,
         "pictures": pictures, "producer":producer, "producerImg":producerImg, "titleImg":titleImg, "links": list(links)})
