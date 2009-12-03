@@ -39,87 +39,91 @@ for year in range(2000,2010):
     if 'dates' not in keys:
       continue # Skip this table - it's not a normal list of productions
     for row in table.findAll('tr')[1:]:
-      rawCols = dict(zip(keys,row.findAll('td')))
+      theatreImg = ''
+      theatre = ''
+      rawdates =''
+      dates = ['','']
+      titleImg = ''
+      title = ''
+      cast = []
 
-      # Get theatre column
-      theatreCol = rawCols.get('venue',rawCols.get('theatre',''))
-      # Get theatre logo if present
-      if theatreCol.img:
-        theatreImg = str(theatreCol.img['src'])
-      else:
-        theatreImg = ''
-      # Get theatre name, cutting off text after "Box Office" if present
-      theatre = extractText(theatreCol).split(" Box Office",1)[0]
+      for colname,colsoup in zip(keys,row.findAll('td')):
 
-      # Get date column and fix years like '01 to be 2001
-      rawDates = extractText(rawCols['dates']).replace(" '"," 20")
 
-      # Split into start and end date
-      if " to " in rawDates:
-        dates = rawDates.split(" to ",1)
-      elif " - " in rawDates:
-        dates = rawDates.split(" - ",1)
-      elif " -" in rawDates:
-        dates = rawDates.split(" -",1)
-      elif rawDates.lower().startswith("until "):
-        dates = ['',rawDates[6:]]
-      elif rawDates.lower().startswith("from "):
-        dates = [rawDates[5:],'']
-      elif not rawDates:
-        dates = ['','']
-      else:
-        dates = [rawDates,"!!ERROR!!"]
+        if colname in ('venue','theatre'):
+          # Get theatre logo if present
+          if colsoup.img:
+            theatreImg = str(colsoup.img['src'])
+          # Get theatre name, cutting off text after "Box Office" if present
+          theatre = extractText(colsoup).split(" Box Office",1)[0]
 
-      # Fix dates with month but no year
-      for i in 0,1:
-        if dates[i][-3:].lower() in ("nov","dec"):
-          dates[i]+=' ' + str(year)
-        if dates[i][-3:].lower() in ("jan","feb"):
-          dates[i]+=' ' + str(year+1)
+        elif colname == "dates":
+          rawDates = extractText(colsoup).replace(" '"," 20")
 
-      # Get the title
-      rawTitle = rawCols.get('pantomime',rawCols.get('production',''))
-      titleImg = ""
-      # If part of it is bold, that's the title.
-      if rawTitle.b:
-        title = extractText(rawTitle.b)
-      # If there is an image, that's the title.
-      elif rawTitle.img:
-        titleImg = rawTitle.img['src']
-        title = getTitleOfImage(titleImg)
-        if not title:
-          title = "!!ERROR !! %s" % titleImg
-          missingImgs.add(titleImg)
-      else:
-        title = extractText(rawTitle)
-      # Strip the link to the handbill if present
-      if title.lower().endswith(' handbill'):
-        title = title[:-9]
+          # Split into start and end date
+          if " to " in rawDates:
+            dates = rawDates.split(" to ",1)
+          elif " - " in rawDates:
+            dates = rawDates.split(" - ",1)
+          elif " -" in rawDates:
+            dates = rawDates.split(" -",1)
+          elif rawDates.lower().startswith("until "):
+            dates = ['',rawDates[6:]]
+          elif rawDates.lower().startswith("from "):
+            dates = [rawDates[5:],'']
+          elif not rawDates:
+            dates = ['','']
+          else:
+            dates = [rawDates,"!!ERROR!!"]
 
-      # Get text from cast column and strip the word "Handbill" from the end of it (if present)
-      castText = extractText(rawCols.get('starring',rawCols.get('cast details','')))
-      if castText.lower().endswith(' handbill'):
-        castText = castText[:-9]
+          # Fix dates with month but no year
+          for i in 0,1:
+            if dates[i][-3:].lower() in ("nov","dec"):
+              dates[i]+=' ' + str(year)
+            if dates[i][-3:].lower() in ("jan","feb"):
+              dates[i]+=' ' + str(year+1)
 
-      # Split the cast into a list of people
-      if "; " in castText:
-        cast = castText.split("; ")
-      elif ", " in castText:
-        cast = castText.split(", ")
-      elif castText:
-        cast = [castText]
-      else:
-        cast = []
+        elif colname in ('pantomime','production'):
+          # If part of it is bold, that's the title.
+          if colsoup.b:
+            title = extractText(colsoup.b)
+          # If there is an image, that's the title.
+          elif colsoup.img:
+            titleImg = colsoup.img['src']
+            title = getTitleOfImage(titleImg)
+            if not title:
+              title = "!!ERROR !! %s" % titleImg
+              missingImgs.add(titleImg)
+          else:
+            title = extractText(colsoup)
+          # Strip the link to the handbill if present
+          if title.lower().endswith(' handbill'):
+            title = title[:-9]
 
-      # Split the last cast member into 2 people if the list ends with " and "
-      if cast and ' and ' in cast[-1]:
-        cast[-1],extra = cast[-1].rsplit(' and ',1)
-        cast.append(extra)
+        elif colname in ('starring','cast details'):
+          # Get text from cast column and strip the word "Handbill" from the end of it (if present)
+          castText = extractText(colsoup)
+          if castText.lower().endswith(' handbill'):
+            castText = castText[:-9]
 
-      # Producers
-      if "producer" in keys:
-        producer = extractText(rawCols['producer'])
-        producerImg = rawCols['producer'].img and rawCols['producer'].img['src'] or ''
+          # Split the cast into a list of people
+          if "; " in castText:
+            cast = castText.split("; ")
+          elif ", " in castText:
+            cast = castText.split(", ")
+          elif castText:
+            cast = [castText]
+
+          # Split the last cast member into 2 people if the list ends with " and "
+          if cast and ' and ' in cast[-1]:
+            cast[-1],extra = cast[-1].rsplit(' and ',1)
+            cast.append(extra)
+
+
+        # Producers
+        elif colname == "producer":
+          producer = extractText(colsoup)
+          producerImg = colsoup.img and colsoup.img['src'] or ''
 
       # Add link to page sourced from
       source = "http://www.its-behind-you.com/diary%s%s.html" % (year,year+1)
