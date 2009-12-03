@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # vim: set fileencoding=UTF-8 :
-from BeautifulSoup import BeautifulSoup
+import BeautifulSoup
 from imageList import getTitleOfImage
 import sys
 YAML = False
@@ -17,7 +17,7 @@ def extractText(soup):
 missingImgs = set()
 plays = []
 for year in range(2000,2010):
-  soup = BeautifulSoup(open("diary"+str(year)+str(year+1)+".html"))
+  soup = BeautifulSoup.BeautifulSoup(open("diary"+str(year)+str(year+1)+".html"))
   for table in soup.findAll('table'):
     producer = ""
     producerImg = ""
