@@ -10,7 +10,11 @@ def extractText(soup):
       BeautifulSoup tag. I'm amazed Beautiful soup doesn't have something
       like this built in."""
   try:
-    return ' '.join(' '.join(soup(text=True)).replace('&amp;','&').replace('&nbsp;',' ').replace('&rsquo;',"'").replace('&lsquo;',"'").split())
+    result = ' '.join(soup(text=True))
+    result = result.replace('&nbsp;',' ').replace('&rsquo;',"'").replace('&lsquo;',"'")
+    result = result.replace('&quot;','"')
+    result = result.replace('&amp;','&')
+    return ' '.join(result.split()) # Normalise whitespace
   except:
     return soup
 
