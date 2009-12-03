@@ -158,43 +158,45 @@ dupeIds = []
 playId = 1
 removedDupes = 0
 while playId < len(plays):
-  matchingKeys = set()
-  nonMatchingKeys = set()
-  for key in plays[playId].keys():
-    if plays[playId-1].has_key(key):
-      if plays[playId][key] and plays[playId-1][key]: # Check both keys have data
-        if plays[playId][key]==plays[playId-1][key]: # See if it's the same data
-          matchingKeys.add(key)
-        else:
-          nonMatchingKeys.add(key)
-
-  if nonMatchingKeys.issubset(set(['links','images'])): # Certainly a dupe - nothing disagrees. There may data missing from one or other.
-    # Mash data together & remove it.
+  for compare in range(1,1+max(playId,4)): # compare up to the last 4 records
+    matchingKeys = set()
+    nonMatchingKeys = set()
     for key in plays[playId].keys():
-      if key in ('links','images'):
-        plays[playId-1][key] = plays[playId-1][key] + plays[playId][key]
-      else:
-        plays[playId-1][key] = plays[playId-1][key] or plays[playId][key]
-    plays.pop(playId)
-    removedDupes += 1
-    continue # don't increment playId
+      if plays[playId-compare].has_key(key):
+        if plays[playId][key] and plays[playId-compare][key]: # Check both keys have data
+          if plays[playId][key]==plays[playId-compare][key]: # See if it's the same data
+            matchingKeys.add(key)
+          else:
+            nonMatchingKeys.add(key)
 
-  elif len(matchingKeys) > 3 and len(nonMatchingKeys) < 4 and 'dates' in nonMatchingKeys and 'theatre' in nonMatchingKeys: # Same production in 2 theatres
-    # For now, tag it with a productionId
-    if 'productionId' not in plays[playId-1]:
-      plays[playId-1]['productionId'] = playId-1
-    plays[playId]['productionId'] = plays[playId-1]['productionId']
+    if nonMatchingKeys.issubset(set(['links','images'])): # Certainly a dupe - nothing disagrees. There may data missing from one or other.
+      # Mash data together & remove it.
+      for key in plays[playId].keys():
+        if key in ('links','images'):
+          plays[playId-compare][key] = plays[playId-compare][key] + plays[playId][key]
+        else:
+          plays[playId-compare][key] = plays[playId-compare][key] or plays[playId][key]
+      plays.pop(playId)
+      removedDupes += 1
+      playId -= 1 # don't increment playId
+      break # Stop checking this
 
-  elif 'year' in matchingKeys and len(matchingKeys) > len(nonMatchingKeys)*2: # Probably a dupe
-    plays[playId]['dupe'] = playId
-    plays[playId-1]['dupe'] = playId
-    plays[playId]['dupeKeys'] = matchingKeys
-    plays[playId-1]['dupeKeys'] = matchingKeys
-    plays[playId]['nonDupeKeys'] = nonMatchingKeys
-    plays[playId-1]['nonDupeKeys'] = nonMatchingKeys
-    dupes1.append(plays[playId])
-    dupes2.append(plays[playId-1])
-    dupeIds.append(playId)
+    elif len(matchingKeys) > 3 and len(nonMatchingKeys) < 4 and 'dates' in nonMatchingKeys and 'theatre' in nonMatchingKeys: # Same production in 2 theatres
+      # For now, tag it with a productionId
+      if 'productionId' not in plays[playId-compare]:
+        plays[playId-compare]['productionId'] = playId-compare
+      plays[playId]['productionId'] = plays[playId-compare]['productionId']
+
+    elif 'year' in matchingKeys and len(matchingKeys) > len(nonMatchingKeys)*2: # Probably a dupe
+      plays[playId]['dupe'] = playId
+      plays[playId-compare]['dupe'] = playId
+      plays[playId]['dupeKeys'] = matchingKeys
+      plays[playId-compare]['dupeKeys'] = matchingKeys
+      plays[playId]['nonDupeKeys'] = nonMatchingKeys
+      plays[playId-compare]['nonDupeKeys'] = nonMatchingKeys
+      dupes1.append(plays[playId])
+      dupes2.append(plays[playId-compare])
+      dupeIds.append(playId)
 
 
   playId += 1
