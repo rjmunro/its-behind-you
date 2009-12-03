@@ -15,7 +15,9 @@ def extractText(soup):
     return soup
 
 def fixLinks(link):
-  if link.startswith('http://'):
+  if not link:
+    return ""
+  elif link.startswith('http://'):
     return link
   elif link.startswith('/'):
     return 'http://www.its-behind-you.com'+link
