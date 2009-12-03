@@ -16,6 +16,7 @@ def extractText(soup):
 
 missingImgs = set()
 plays = []
+castLinks = {}
 for year in range(2000,2010):
   soup = BeautifulSoup.BeautifulSoup(open("diary"+str(year)+str(year+1)+".html"))
   for table in soup.findAll('table'):
@@ -114,11 +115,21 @@ for year in range(2000,2010):
       # Find any other images
       pictures = [i['src'] for i in row.findAll('img') if str(i['src']) not in (theatreImg, producerImg, titleImg)]
 
-      # Find any other links
-      links = [(i['href'],extractText(i)) for i in row.findAll('a') if i.has_key('href')]
+      # Find any links
+      links = set()
+      for href,text in [(i['href'],extractText(i)) for i in row.findAll('a') if i.has_key('href')]:
+        if text in cast:
+          if text in castLinks:
+            castLinks[text].add(href)
+          else:
+            castLinks[text] = set([href])
+        elif href.endswith('.jpg'):
+          pictures.append(href)
+        else:
+            links.add((href,text))
 
       plays.append({'theatre':theatre,'theatreImg':theatreImg,'dates':dates,'title':title,'cast':cast, 'year':year, 'source':source,
-        "pictures": pictures, "producer":producer, "producerImg":producerImg, "titleImg":titleImg, "links": links})
+        "pictures": pictures, "producer":producer, "producerImg":producerImg, "titleImg":titleImg, "links": list(links)})
 
 # Sort plays
 plays.sort(lambda x,y: cmp(x['year'],y['year']) or cmp(x['title'],y['title']) or cmp(x['theatre'],y['theatre']))
@@ -189,6 +200,8 @@ if __name__=="__main__":
     from pprint import pprint
     print "plays = ",
     pprint(plays)
+    print "castLinks = ",
+    pprint(castLinks)
 
   sys.stderr.write("%s dupes removed\n" % removedDupes)
   sys.stderr.write("%s plays dumped\n" % len(plays))
