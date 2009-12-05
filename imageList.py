@@ -73,6 +73,7 @@ shortCuts = [
     ("wizard","The Wizard of Oz"),
     ]
 def getTitleOfImage(img):
+  img = img.replace("http://www.its-behind-you.com/",'').replace("http://its-behind-you.com/",'')
   if img in imageList:
     return imageList[img]
   img = img.lower()
