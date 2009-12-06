@@ -115,9 +115,9 @@ for year in range(2000,2010):
 
           # Split the cast into a list of people
           if "; " in castText:
-            cast = castText.split("; ")
+            cast = [i.strip() for i in castText.split("; ")]
           elif ", " in castText:
-            cast = castText.split(", ")
+            cast = [i.strip() for i in castText.split(", ")]
           elif castText:
             cast = [castText]
 
