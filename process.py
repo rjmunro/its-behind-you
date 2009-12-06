@@ -151,8 +151,8 @@ for year in range(2000,2010):
         else:
           links.add((text,href))
 
-      plays.append({'theatre':theatre,'theatreImg':theatreImg,'dates':dates,'title':title,'cast':cast, 'year':year, 'source':source,
-        "pictures": pictures, "producer":producer, "producerImg":producerImg, "titleImg":titleImg, "links": list(links)})
+      plays.append({'theatre': theatre, 'theatreImg': theatreImg, 'dates': dates, 'title': title, 'cast': cast, 'year': year, 'source': source,
+        "pictures": pictures, "producer": producer, "producerImg": producerImg, "titleImg": titleImg, "links": links})
 
 # Sort plays
 plays.sort(lambda x,y: cmp(x['year'],y['year']) or cmp(x['title'],y['title']) or cmp(x['theatre'],y['theatre']))
