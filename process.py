@@ -52,16 +52,29 @@ for year in range(2000,2010):
       titleImg = ''
       title = ''
       cast = []
+      links = {}
+      pictures = set()
 
       for colname,colsoup in zip(keys,row.findAll('td')):
+        # Find any images
+        colPictures = [fixLinks(i['src']) for i in colsoup.findAll('img')]
+
+        # Find any links
+        linksSoup = colsoup.findAll('a')
+        i = 0
+        while i<len(linksSoup):
+          if "handbill" in extractText(linksSoup[i]).lower():
+            bill = linksSoup.pop(i)
+            bill.extract()
+            pictures.add(fixLinks(bill['href']))
+          i += 1
+        colLinks = dict([(fixLinks(i['href']),extractText(i)) for i in colsoup.findAll('a') if i.has_key('href')])
 
 
         if colname in ('venue','theatre'):
-          # Get theatre logo if present
-          if colsoup.img:
-            theatreImg = fixLinks(colsoup.img['src'])
           # Get theatre name, cutting off text after "Box Office" if present
-          theatre = extractText(colsoup).split(" Box Office",1)[0]
+          theatreList = extractText(colsoup).split(" Box Office",1)
+          theatre = theatreList[0]
 
         elif colname == "dates":
           rawDates = extractText(colsoup).replace(" '"," 20")
@@ -93,25 +106,19 @@ for year in range(2000,2010):
           # If part of it is bold, that's the title.
           if colsoup.b:
             title = extractText(colsoup.b)
+            colsoup.b.extract()
           # If there is an image, that's the title.
-          elif colsoup.img:
-            titleImg = colsoup.img['src']
+          elif colPictures:
+            titleImg = colPictures.pop(0)
             title = getTitleOfImage(titleImg)
-            titleImg = fixLinks(titleImg)
             if not title:
               title = "!!ERROR !! %s" % titleImg
               missingImgs.add(titleImg)
           else:
             title = extractText(colsoup)
-          # Strip the link to the handbill if present
-          if title.lower().endswith(' handbill'):
-            title = title[:-9]
 
         elif colname in ('starring','cast details'):
-          # Get text from cast column and strip the word "Handbill" from the end of it (if present)
           castText = extractText(colsoup)
-          if castText.lower().endswith(' handbill'):
-            castText = castText[:-9]
 
           # Split the cast into a list of people
           if "; " in castText:
@@ -130,26 +137,16 @@ for year in range(2000,2010):
         # Producers
         elif colname == "producer":
           producer = extractText(colsoup)
-          producerImg = colsoup.img and fixLinks(colsoup.img['src']) or ''
+          if colPictures:
+            producerImg = colPictures.pop(0)
+          else:
+            producerImg = ''
+
+        pictures.update(colPictures)
+        links.update(colLinks)
 
       # Add link to page sourced from
       source = "http://www.its-behind-you.com/diary%s%s.html" % (year,year+1)
-
-      # Find any other images
-      pictures = [fixLinks(i['src']) for i in row.findAll('img') if fixLinks(i['src']) not in (theatreImg, producerImg, titleImg)]
-
-      # Find any links
-      links = set()
-      for href,text in [(fixLinks(i['href']),extractText(i)) for i in row.findAll('a') if i.has_key('href')]:
-        if text in cast:
-          if text in castLinks: # This person already has some links
-            castLinks[text].add(href)
-          else: # Add a new set to castLins for this person
-            castLinks[text] = set([href])
-        elif href.endswith('.jpg'):
-          pictures.append(href)
-        else:
-          links.add((text,href))
 
       plays.append({'theatre': theatre, 'theatreImg': theatreImg, 'dates': dates, 'title': title, 'cast': cast, 'year': year, 'source': source,
         "pictures": pictures, "producer": producer, "producerImg": producerImg, "titleImg": titleImg, "links": links})
@@ -179,7 +176,7 @@ while playId < len(plays):
       # Mash data together & remove it.
       for key in plays[playId].keys():
         if key in ('links','images'):
-          plays[playId-compare][key] = plays[playId-compare][key] + plays[playId][key]
+          plays[playId-compare][key].update(plays[playId][key])
         else:
           plays[playId-compare][key] = plays[playId-compare][key] or plays[playId][key]
       plays.pop(playId)
