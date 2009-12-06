@@ -47,6 +47,7 @@ for year in range(2000,2010):
     if 'dates' not in keys:
       continue # Skip this table - it's not a normal list of productions
     for row in table.findAll('tr')[1:]:
+      description = ''
       theatreImg = ''
       theatre = ''
       rawdates =''
@@ -67,6 +68,8 @@ for year in range(2000,2010):
         while i<len(linksSoup):
           if "handbill" in extractText(linksSoup[i]).lower():
             bill = linksSoup.pop(i)
+            while bill.next and (not isinstance(bill.next, BeautifulSoup.NavigableString)) and bill.next.name !='td':
+              description += unicode(bill.next.extract())
             bill.extract()
             pictures.add(fixLinks(bill['href']))
           i += 1
@@ -130,6 +133,8 @@ for year in range(2000,2010):
           else:
             title = extractText(colsoup)
 
+          description += extractText(colsoup)
+
         elif colname in ('starring','cast details'):
           castText = extractText(colsoup)
 
@@ -162,7 +167,7 @@ for year in range(2000,2010):
       source = "http://www.its-behind-you.com/diary%s%s.html" % (year,year+1)
 
       plays.append({'theatre': theatre, 'theatreImg': theatreImg, 'dates': dates, 'title': title, 'cast': cast, 'year': year, 'source': source,
-        "pictures": pictures, "producer": producer, "producerImg": producerImg, "titleImg": titleImg, "links": links})
+        "pictures": pictures, "producer": producer, "producerImg": producerImg, "titleImg": titleImg, "links": links, 'description': description})
 
 # Sort plays
 plays.sort(lambda x,y: cmp(x['year'],y['year']) or cmp(x['title'],y['title']) or cmp(x['theatre'],y['theatre']))
