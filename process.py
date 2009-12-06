@@ -33,6 +33,8 @@ def fixLinks(link):
 missingImgs = set()
 plays = []
 castLinks = {}
+theatres = {}
+
 for year in range(2000,2010):
   soup = BeautifulSoup.BeautifulSoup(open("diary"+str(year)+str(year+1)+".html"))
   for table in soup.findAll('table'):
@@ -75,6 +77,17 @@ for year in range(2000,2010):
           # Get theatre name, cutting off text after "Box Office" if present
           theatreList = extractText(colsoup).split(" Box Office",1)
           theatre = theatreList[0]
+          if theatre not in theatres:
+            theatres[theatre] = {}
+          if len(theatreList)>1:
+            theatres[theatre]['boxOffice'] = theatreList[1]
+
+          # Get theatre logo if present
+          if colPictures:
+            theatreImg = colPictures[0]
+            if 'logos' not in theatres[theatre]:
+              theatres[theatre]['logos'] = set(colPictures[0:1])
+            colPictures.pop(0)
 
         elif colname == "dates":
           rawDates = extractText(colsoup).replace(" '"," 20")
@@ -223,6 +236,8 @@ if __name__=="__main__":
     pprint(plays)
     print "castLinks = ",
     pprint(castLinks)
+    print "theatres = ",
+    pprint(theatres)
 
   sys.stderr.write("%s dupes removed\n" % removedDupes)
   sys.stderr.write("%s plays dumped\n" % len(plays))
