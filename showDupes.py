@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from process import dupes1,dupes2,dupeIds
 from pprint import pprint
 import sys
