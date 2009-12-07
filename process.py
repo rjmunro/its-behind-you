@@ -190,7 +190,7 @@ while playId < len(plays):
           else:
             nonMatchingKeys.add(key)
 
-    if nonMatchingKeys.issubset(set(['links','images'])): # Certainly a dupe - nothing disagrees. There may data missing from one or other.
+    if nonMatchingKeys.issubset(set(['description','links','images'])): # Certainly a dupe - nothing disagrees. There may data missing from one or other.
       # Mash data together & remove it.
       for key in plays[playId].keys():
         if key in ('links','images'):
