@@ -177,7 +177,7 @@ for year in range(2000,2010):
         "pictures": pictures, "producer": producer, "producerImg": producerImg, "titleImg": titleImg, "links": links, 'description': description})
 
 # Sort plays
-plays.sort(lambda x,y: cmp(x['year'],y['year']) or cmp(x['title'],y['title']) or cmp(x['theatre'],y['theatre']))
+plays.sort(lambda x,y: cmp(x['year'],y['year']) or cmp(x['title'],y['title']) or cmp(x['producer'],y['producer']))
 
 # Search consecutive pairs for duplicate data
 dupes1 = []
