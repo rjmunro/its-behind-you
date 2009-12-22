@@ -202,6 +202,8 @@ while playId < len(plays):
       for key in plays[playId].keys():
         if key in ('links','images'):
           plays[playId-compare][key].update(plays[playId][key])
+        elif key in ('dupe','dupeKeys','nonDupeKeys'):
+          pass
         else:
           plays[playId-compare][key] = plays[playId-compare][key] or plays[playId][key]
       plays.pop(playId)
