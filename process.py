@@ -173,8 +173,9 @@ for year in range(2000,2010):
       # Add link to page sourced from
       source = "http://www.its-behind-you.com/diary%s%s.html" % (year,year+1)
 
-      plays.append({'theatre': theatre, 'theatreImg': theatreImg, 'dates': dates, 'title': title, 'cast': cast, 'year': year, 'source': source,
-        "pictures": pictures, "producer": producer, "producerImg": producerImg, "titleImg": titleImg, "links": links, 'description': description})
+      plays.append({'title': title, 'cast': cast, 'year': year, 'source': source,
+        "pictures": pictures, "producer": producer, "producerImg": producerImg, "titleImg": titleImg, "links": links, 'description': description,
+        'dates':set([(tuple(dates), theatre)])})
 
 # Sort plays
 plays.sort(lambda x,y: cmp(x['year'],y['year']) or cmp(x['title'],y['title']) or cmp(x['producer'],y['producer']))
@@ -197,10 +198,10 @@ while playId < len(plays):
           else:
             nonMatchingKeys.add(key)
 
-    if nonMatchingKeys.issubset(set(['description','links','images'])): # Certainly a dupe - nothing disagrees. There may data missing from one or other.
+    if nonMatchingKeys.issubset(set(['dates','description','links','images'])): # Certainly a dupe - nothing disagrees. There may data missing from one or other.
       # Mash data together & remove it.
       for key in plays[playId].keys():
-        if key in ('links','images'):
+        if key in ('links','images','dates'):
           plays[playId-compare][key].update(plays[playId][key])
         elif key in ('dupe','dupeKeys','nonDupeKeys'):
           pass
@@ -210,12 +211,6 @@ while playId < len(plays):
       removedDupes += 1
       playId -= 1 # don't increment playId
       break # Stop checking this
-
-    elif len(matchingKeys) > 3 and len(nonMatchingKeys) < 4 and 'dates' in nonMatchingKeys and 'theatre' in nonMatchingKeys: # Same production in 2 theatres
-      # For now, tag it with a productionId
-      if 'productionId' not in plays[playId-compare]:
-        plays[playId-compare]['productionId'] = playId-compare
-      plays[playId]['productionId'] = plays[playId-compare]['productionId']
 
     elif 'year' in matchingKeys and len(matchingKeys) > len(nonMatchingKeys)*2: # Probably a dupe
       plays[playId]['dupe'] = playId
