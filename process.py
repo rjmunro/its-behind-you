@@ -92,6 +92,13 @@ for year in range(2000,2010):
               theatres[theatre]['logos'] = set(colPictures[0:1])
             colPictures.pop(0)
 
+          # Get theatre link if there is only a single link in the theatre column.
+          if len(colLinks)==1:
+            theatreLink = colLinks.items()[0]
+            if 'links' not in theatres[theatre]:
+              theatres[theatre]['links'] = set([theatreLink])
+            colLinks = {}
+
         elif colname == "dates":
           rawDates = extractText(colsoup).replace(" '"," 20")
 
