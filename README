@@ -1,0 +1,10 @@
+Run:
+python process.py > plays.py
+and plays.py will then be a valid python script which is
+basically the output of python's pprint function on the data.
+
+It defines 3 variables:
+
+ * plays - the main data
+ * castLinks - Any links to cast members sites found
+ * theatres - links to the theatres and their logos. 
