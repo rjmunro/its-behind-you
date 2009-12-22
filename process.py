@@ -90,6 +90,8 @@ for year in range(2000,2010):
             theatreImg = colPictures[0]
             if 'logos' not in theatres[theatre]:
               theatres[theatre]['logos'] = set(colPictures[0:1])
+            else:
+              theatres[theatre]['logos'].add(theatreImg)
             colPictures.pop(0)
 
           # Get theatre link if there is only a single link in the theatre column.
