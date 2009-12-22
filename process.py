@@ -160,6 +160,13 @@ for year in range(2000,2010):
             cast[-1],extra = cast[-1].rsplit(' and ',1)
             cast.append(extra)
 
+          for url,name in colLinks.items():
+            if name in cast:
+              if name in castLinks:
+                castLinks[name].add(url)
+              else:
+                castLinks[name] = set([url])
+              colLinks.pop(url)
 
         # Producers
         elif colname == "producer":
