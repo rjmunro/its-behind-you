@@ -35,7 +35,7 @@ plays = []
 castLinks = {}
 theatres = {}
 
-for year in range(2000,2010):
+for year in range(2000,2011):
   soup = BeautifulSoup.BeautifulSoup(open("diary"+str(year)+str(year+1)+".html"))
   for table in soup.findAll('table'):
     producer = ""
